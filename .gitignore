@@ -1,0 +1,20 @@
+bin/
+obj/
+
+# Linux
+Makefile
+libs/Makefile
+**/*.make
+
+# Windows
+**/*.sln
+**/*.vcxproj
+**/*.vcxproj.user
+**/*.vcxproj.filters
+.vs/
+
+# ImGui
+imgui.ini
+
+.vscode
+compile_commands.json
