@@ -14,7 +14,7 @@ if(MSVC)
 endif()
 
 set(sourceFiles
-    Main.cpp
+    main.cpp
 )
 
 add_executable(Project ${sourceFiles})
