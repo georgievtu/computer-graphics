@@ -22,6 +22,8 @@ endif ()
 
 add_custom_target(copy_resources ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/src/resources
 )
 
