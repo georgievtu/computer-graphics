@@ -22,8 +22,8 @@ constexpr auto window_width = 1280;
 constexpr auto window_height = 720;
 constexpr auto window_title = "OpenGL";
 constexpr auto gl_major = 4;
-constexpr auto gl_minor = 6;
-constexpr auto glsl_version = "#version 460";
+constexpr auto gl_minor = 1;
+constexpr auto glsl_version = "#version 410";
 constexpr auto clear_color = glm::vec4(0.45f, 0.55f, 0.60f, 0.90f);
 
 static unsigned int gl_print_error(void)
