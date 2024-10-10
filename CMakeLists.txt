@@ -20,6 +20,7 @@ if (${FORCE_COLORED_OUTPUT})
     endif ()
 endif ()
 
+# Add the resources directory to the build
 add_custom_target(copy_resources ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources

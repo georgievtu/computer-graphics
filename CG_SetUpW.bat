@@ -26,7 +26,18 @@ echo.
 set /p choice="Do you want to use CMake or Premake? (C/P): "
 if /i "%choice%"=="C" (
     echo You chose CMake.
-    rem Add your CMake setup commands here
+    rem ask the user if they want to use static or dynamic installed libraries
+    set /p lib_choice="Do you want to use static or dynamic installed libraries? (S/D): "
+    if /i "%lib_choice%"=="S" (
+        echo You chose static installed libraries.
+    ) else (
+        if /i "%lib_choice%"=="D" (
+            echo You chose dynamic installed libraries.
+        ) else (
+            echo Invalid choice. Please enter S for static or D for dynamic.
+            goto ask_choice
+        )
+    )
 ) else if /i "%choice%"=="P" (
     echo You chose Premake.
     rem Delete the CMakeLists.txt file from the current folder
