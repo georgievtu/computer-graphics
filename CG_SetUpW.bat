@@ -40,18 +40,18 @@ if /i "%choice%"=="C" (
     ) else (
         echo premake5.lua not found.
     )
-    rem delete the CG_SetUpW.bat, CMake-Linux.sh and Premake-Windows.bat files
+    rem delete the CG_SetUpW.bat, Premake-Linux.sh and Premake-Windows.bat files
     if exist CG_SetUpW.bat (
         del CG_SetUpW.bat
         echo CG_SetUpW.bat deleted.
     ) else (
         echo CG_SetUpW.bat not found.
     )
-    if exist CMake-Linux.sh (
-        del CMake-Linux.sh
-        echo CMake-Linux.sh deleted.
+    if exist Premake-Linux.sh (
+        del Premake-Linux.sh
+        echo Premake-Linux.sh deleted.
     ) else (
-        echo CMake-Linux.sh not found.
+        echo Premake-Linux.sh not found.
     )
     if exist Premake-Windows.bat (
         del Premake-Windows.bat
@@ -71,7 +71,7 @@ if /i "%choice%"=="C" (
     cd build
     rem run cmake
     cmake ..
-    
+    cd ..
 ) else if /i "%choice%"=="P" (
     echo You chose Premake.
     rem Delete the CMakeLists.txt file from the current folder
