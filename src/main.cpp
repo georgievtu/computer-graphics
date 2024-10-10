@@ -369,24 +369,14 @@ static void init(void)
 
     glUseProgram(program);
 
-    /*
-     * Projection.
-     * FOV, Aspect, Z_NEAR, Z_FAR
-     */
     glm::mat4 projection = glm::perspective(cg::perspective.fov,
                                             cg::perspective.aspect,
                                             cg::perspective.z_near,
                                             cg::perspective.z_far);
-    /*
-     * View.
-     * Eye not in the center so we are outside the object.
-     * Center at 0.
-     * Up = y direction.
-     */
-    glm::vec3 eye = glm::vec3(0.0f, 0.0f, 5.0f);
-    glm::vec3 center = glm::vec3(0.0f);
-    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-    glm::mat4 view = glm::lookAt(eye, center, up);
+
+    glm::mat4 view = glm::lookAt(cg::camera.eye,
+                                 cg::camera.center,
+                                 cg::camera.up);
 
     /*
      * Model.
