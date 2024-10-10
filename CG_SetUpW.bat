@@ -26,18 +26,52 @@ echo.
 set /p choice="Do you want to use CMake or Premake? (C/P): "
 if /i "%choice%"=="C" (
     echo You chose CMake.
-    rem ask the user if they want to use static or dynamic installed libraries
-    set /p lib_choice="Do you want to use static or dynamic installed libraries? (S/D): "
-    if /i "%lib_choice%"=="S" (
-        echo You chose static installed libraries.
+    rem Delete the premake folder and all its contents
+    if exist premake (
+        rmdir /s /q premake
+        echo premake folder deleted.
     ) else (
-        if /i "%lib_choice%"=="D" (
-            echo You chose dynamic installed libraries.
-        ) else (
-            echo Invalid choice. Please enter S for static or D for dynamic.
-            goto ask_choice
-        )
+        echo premake folder not found.
     )
+    rem delete the premake5.lua file
+    if exist premake5.lua (
+        del premake5.lua
+        echo premake5.lua deleted.
+    ) else (
+        echo premake5.lua not found.
+    )
+    rem delete the CG_SetUpW.bat, CMake-Linux.sh and Premake-Windows.bat files
+    if exist CG_SetUpW.bat (
+        del CG_SetUpW.bat
+        echo CG_SetUpW.bat deleted.
+    ) else (
+        echo CG_SetUpW.bat not found.
+    )
+    if exist CMake-Linux.sh (
+        del CMake-Linux.sh
+        echo CMake-Linux.sh deleted.
+    ) else (
+        echo CMake-Linux.sh not found.
+    )
+    if exist Premake-Windows.bat (
+        del Premake-Windows.bat
+        echo Premake-Windows.bat deleted.
+    ) else (
+        echo Premake-Windows.bat not found.
+    )
+    rem Delete the dependencies folder and all its contents
+    if exist dependencies (
+        rmdir /s /q dependencies
+        echo dependencies folder deleted.
+    ) else (
+        echo dependencies folder not found.
+    )
+    rem make build folder and go to it
+    if not exist build mkdir build
+    cd build
+    rem run cmake
+    cmake ..
+    
 ) else if /i "%choice%"=="P" (
     echo You chose Premake.
     rem Delete the CMakeLists.txt file from the current folder
