@@ -54,7 +54,9 @@ static void key_callback(GLFWwindow* window,
             glfwSetWindowShouldClose(window, true);
             break;
         case GLFW_KEY_A:
-            g_model = glm::rotate(g_model, glm::radians<float>(5.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            g_model = glm::rotate(g_model,
+                                  glm::radians<float>(5.0f),
+                                  glm::vec3(0.0f, 1.0f, 0.0f));
             set_pvm(g_program, recalculate_pvm());
             break;
         case GLFW_KEY_D:
@@ -67,6 +69,12 @@ static void key_callback(GLFWwindow* window,
             break;
     }
 }
+
+static void size_callback(GLFWwindow* window, int width, int height)
+{
+    cg::perspective.aspect = static_cast<float>(width) / height;
+    set_pvm(g_program, recalculate_pvm());
+};
 
 GLFWwindow* init_window(void)
 {
@@ -101,6 +109,7 @@ GLFWwindow* init_window(void)
      * Set event callbacks.
      */
     glfwSetKeyCallback(window, key_callback);
+    glfwSetWindowSizeCallback(window, size_callback);
 
     /*
      * Load OpenGL with GLAD.
