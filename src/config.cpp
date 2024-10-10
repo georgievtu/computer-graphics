@@ -1,4 +1,5 @@
 #include "config.h"
+#include "glm/fwd.hpp"
 
 namespace cg
 {
@@ -13,11 +14,26 @@ const Window window = {
     .window_height = 720,
     .window_title = "Computer Graphics"};
 
+/*
+ * Projection.
+ * FOV, Aspect, Z_NEAR, Z_FAR
+ */
 const Perspective perspective = {
     .fov = 45.0f,
     .aspect = static_cast<float>(window.window_width) / window.window_height,
     .z_near = 1.0f,
     .z_far = 100.0f};
+
+/*
+ * View.
+ * Eye not in the center so we are outside the object.
+ * Center at 0.
+ * Up = y direction.
+ */
+const Camera camera = {
+    .eye = glm::vec3(0.0f, 0.0f, 5.0f),
+    .center = glm::vec3(0.0f),
+    .up = glm::vec3(0.0f, 1.0f, 0.0f)};
 
 } // namespace cg
 
