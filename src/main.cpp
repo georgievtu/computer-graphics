@@ -15,11 +15,17 @@
 
 constexpr auto clear_color = glm::vec4(0.45f, 0.55f, 0.60f, 0.90f);
 
-// TODO
+/*
+ * Globals. For convenience.
+ */
+static glm::mat4 g_model = glm::mat4(1.0f);
+static unsigned int g_program = 0;
+
 /*
  * Forward declarations.
  */
-// static void set_pvm(unsigned int program, glm::mat4 pvm);
+static void set_pvm(unsigned int program, glm::mat4 pvm);
+static glm::mat4 recalculate_pvm();
 
 static unsigned int gl_print_error(void)
 {
@@ -46,6 +52,16 @@ static void key_callback(GLFWwindow* window,
     {
         case GLFW_KEY_ESCAPE:
             glfwSetWindowShouldClose(window, true);
+            break;
+        case GLFW_KEY_A:
+            g_model = glm::rotate(g_model, glm::radians<float>(5.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            set_pvm(g_program, recalculate_pvm());
+            break;
+        case GLFW_KEY_D:
+            break;
+        case GLFW_KEY_W:
+            break;
+        case GLFW_KEY_S:
             break;
         default:
             break;
@@ -249,16 +265,20 @@ static unsigned int create_shader(const std::string& vertex_source,
     return program;
 }
 
-// TODO
-static void recalculate_pvm()
+static glm::mat4 recalculate_pvm()
 {
     glm::mat4 projection = glm::perspective(cg::perspective.fov,
                                             cg::perspective.aspect,
                                             cg::perspective.z_near,
                                             cg::perspective.z_far);
+
+    glm::mat4 view = glm::lookAt(cg::camera.eye,
+                                 cg::camera.center,
+                                 cg::camera.up);
+
+    return projection * view * g_model;
 }
 
-// TODO
 static void set_pvm(unsigned int program, glm::mat4 pvm)
 {
     unsigned int u_pvm = glGetUniformLocation(program, "u_pvm");
@@ -368,31 +388,20 @@ static void init(void)
     }
 
     glUseProgram(program);
-
-    glm::mat4 projection = glm::perspective(cg::perspective.fov,
-                                            cg::perspective.aspect,
-                                            cg::perspective.z_near,
-                                            cg::perspective.z_far);
-
-    glm::mat4 view = glm::lookAt(cg::camera.eye,
-                                 cg::camera.center,
-                                 cg::camera.up);
+    g_program = program;
 
     /*
-     * Model.
+     * Model transform.
      * Order of operations is important.
      */
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-    model = glm::rotate(model, 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
+    //g_model = glm::scale(g_model, glm::vec3(1.0f, 1.0f, 1.0f));
+    //g_model = glm::rotate(g_model, 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    //g_model = glm::translate(g_model, glm::vec3(0.0f, 0.5f, 0.0f));
 
     /*
      * Set PVM matrix.
      */
-    glm::mat4 pvm = projection * view * model;
-    unsigned int u_pvm = glGetUniformLocation(program, "u_pvm");
-    glUniformMatrix4fv(u_pvm, 1, GL_TRUE, glm::value_ptr(pvm));
+    set_pvm(program, recalculate_pvm());
 }
 
 static void render(void)
