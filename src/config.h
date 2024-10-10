@@ -1,12 +1,16 @@
 #ifndef CG_CONFIG
 #define CG_CONFIG
 
-/*
- * TODO
- */
-
 namespace cg
 {
+
+struct Version
+{
+    const int gl_major;
+    const int gl_minor;
+    const char* glsl_version;
+};
+extern const Version version;
 
 struct Window
 {
