@@ -6,8 +6,6 @@
 
 #include "GLFW/glfw3.h"
 
-#include "glm/ext.hpp"
-
 #include "config.h"
 
 #include <array>
@@ -16,6 +14,12 @@
 #include <optional>
 
 constexpr auto clear_color = glm::vec4(0.45f, 0.55f, 0.60f, 0.90f);
+
+// TODO
+/*
+ * Forward declarations.
+ */
+// static void set_pvm(unsigned int program, glm::mat4 pvm);
 
 static unsigned int gl_print_error(void)
 {
@@ -245,6 +249,22 @@ static unsigned int create_shader(const std::string& vertex_source,
     return program;
 }
 
+// TODO
+static void recalculate_pvm()
+{
+    glm::mat4 projection = glm::perspective(cg::perspective.fov,
+                                            cg::perspective.aspect,
+                                            cg::perspective.z_near,
+                                            cg::perspective.z_far);
+}
+
+// TODO
+static void set_pvm(unsigned int program, glm::mat4 pvm)
+{
+    unsigned int u_pvm = glGetUniformLocation(program, "u_pvm");
+    glUniformMatrix4fv(u_pvm, 1, GL_TRUE, glm::value_ptr(pvm));
+}
+
 static void init(void)
 {
     /*
@@ -353,8 +373,10 @@ static void init(void)
      * Projection.
      * FOV, Aspect, Z_NEAR, Z_FAR
      */
-    glm::mat4 projection = glm::perspective(45.0f, 4.0f/3.0f, 1.0f, 100.0f);
-
+    glm::mat4 projection = glm::perspective(cg::perspective.fov,
+                                            cg::perspective.aspect,
+                                            cg::perspective.z_near,
+                                            cg::perspective.z_far);
     /*
      * View.
      * Eye not in the center so we are outside the object.

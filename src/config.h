@@ -1,6 +1,8 @@
 #ifndef CG_CONFIG
 #define CG_CONFIG
 
+#include "glm/ext.hpp"
+
 namespace cg
 {
 
@@ -20,10 +22,22 @@ struct Window
 };
 extern const Window window;
 
+struct Perspective
+{
+    float fov;
+    float aspect;
+    float z_near;
+    float z_far;
+};
+extern const Perspective perspective;
+
 struct Camera
 {
-
+    glm::vec3 eye;
+    glm::vec3 center;
+    glm::vec3 up;
 };
+extern const Camera camera;
 
 } // namespace cg
 
