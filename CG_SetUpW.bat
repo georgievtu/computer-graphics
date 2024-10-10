@@ -113,4 +113,7 @@ if /i "%choice%"=="C" (
     echo Invalid choice. Please enter C for CMake or P for Premake.
     goto ask_choice
 )
+echo.
 PAUSE
+color 07
+cls
