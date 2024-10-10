@@ -14,8 +14,11 @@ extern const Version version;
 
 struct Window
 {
-
+    const int window_width;
+    const int window_height;
+    const char* window_title;
 };
+extern const Window window;
 
 struct Camera
 {

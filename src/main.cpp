@@ -15,12 +15,6 @@
 #include <iostream>
 #include <optional>
 
-constexpr auto window_width = 1280;
-constexpr auto window_height = 720;
-constexpr auto window_title = "OpenGL";
-const auto gl_major = cg::version.gl_major;
-const auto gl_minor = cg::version.gl_minor;
-const auto glsl_version = cg::version.glsl_version;
 constexpr auto clear_color = glm::vec4(0.45f, 0.55f, 0.60f, 0.90f);
 
 static unsigned int gl_print_error(void)
@@ -64,17 +58,17 @@ GLFWwindow* init_window(void)
     /*
      * Required for Apple.
      */
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_major);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_minor);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, cg::version.gl_major);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, cg::version.gl_minor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
     /*
      * Create the graphics context and make it current.
      */
-    GLFWwindow* const window = glfwCreateWindow(window_width,
-                                                window_height,
-                                                window_title,
+    GLFWwindow* const window = glfwCreateWindow(cg::window.window_width,
+                                                cg::window.window_height,
+                                                cg::window.window_title,
                                                 nullptr,
                                                 nullptr);
 
@@ -113,7 +107,7 @@ static void init_ImGui(GLFWwindow* window)
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
+    ImGui_ImplOpenGL3_Init(cg::version.glsl_version);
 }
 
 static void reset_viewport(GLFWwindow* window)
