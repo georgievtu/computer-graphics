@@ -17,4 +17,5 @@ libs/Makefile
 imgui.ini
 
 .vscode
+.cache
 compile_commands.json
