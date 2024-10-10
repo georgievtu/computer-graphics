@@ -1,5 +1,4 @@
 #include "config.h"
-#include "glm/fwd.hpp"
 
 namespace cg
 {
@@ -18,7 +17,7 @@ const Window window = {
  * Projection.
  * FOV, Aspect, Z_NEAR, Z_FAR
  */
-const Perspective perspective = {
+Perspective perspective = {
     .fov = 45.0f,
     .aspect = static_cast<float>(window.window_width) / window.window_height,
     .z_near = 1.0f,
@@ -30,7 +29,7 @@ const Perspective perspective = {
  * Center at 0.
  * Up = y direction.
  */
-const Camera camera = {
+Camera camera = {
     .eye = glm::vec3(0.0f, 0.0f, 5.0f),
     .center = glm::vec3(0.0f),
     .up = glm::vec3(0.0f, 1.0f, 0.0f)};

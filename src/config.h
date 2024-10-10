@@ -29,7 +29,7 @@ struct Perspective
     float z_near;
     float z_far;
 };
-extern const Perspective perspective;
+extern Perspective perspective;
 
 struct Camera
 {
@@ -37,7 +37,7 @@ struct Camera
     glm::vec3 center;
     glm::vec3 up;
 };
-extern const Camera camera;
+extern Camera camera;
 
 } // namespace cg
 
