@@ -27,7 +27,7 @@ echo
 
 ask_choice() {
     read -p "Do you want to use CMake or Premake? (C/P): " choice
-    case "${choice^^}" in
+    case "$(echo "${choice}" | tr '[:lower:]' '[:upper:]')" in
         C)
             echo "You chose CMake."
             # Delete the premake folder and all its contents
