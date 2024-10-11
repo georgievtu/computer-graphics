@@ -40,13 +40,7 @@ if /i "%choice%"=="C" (
     ) else (
         echo premake5.lua not found.
     )
-    rem delete the CG_SetUpW.bat, Premake-Linux.sh and Premake-Windows.bat files
-    if exist CG_SetUpW.bat (
-        del CG_SetUpW.bat
-        echo CG_SetUpW.bat deleted.
-    ) else (
-        echo CG_SetUpW.bat not found.
-    )
+    rem delete the Premake-Linux.sh and Premake-Windows.bat files
     if exist Premake-Linux.sh (
         del Premake-Linux.sh
         echo Premake-Linux.sh deleted.
@@ -95,13 +89,7 @@ if /i "%choice%"=="C" (
     ) else (
         echo src\CMakeLists.txt not found.
     )
-    rem delete the CG_SetUpW.bat and the Premake-Linux.sh files
-    if exist CG_SetUpW.bat (
-        del CG_SetUpW.bat
-        echo CG_SetUpW.bat deleted.
-    ) else (
-        echo CG_SetUpW.bat not found.
-    )
+    rem delete the and the Premake-Linux.sh files
     if exist Premake-Linux.sh (
         del Premake-Linux.sh
         echo Premake-Linux.sh deleted.
@@ -112,6 +100,18 @@ if /i "%choice%"=="C" (
 ) else (
     echo Invalid choice. Please enter C for CMake or P for Premake.
     goto ask_choice
+)
+if exist CG_SetUpW.bat (
+    del CG_SetUpW.bat
+    echo CG_SetUpW.bat deleted.
+) else (
+    echo CG_SetUpW.bat not found.
+)
+if exist CG_SetUpLM.sh (
+    del CG_SetUpLM.sh
+    echo CG_SetUpLM.sh deleted.
+) else (
+    echo CG_SetUpLM.sh not found.
 )
 echo.
 PAUSE
