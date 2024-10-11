@@ -4,6 +4,97 @@
 
 _Work in progress_
 
+## How to configure the project
+
+### If you choose Premake Configuration
+#### Windows (Visual Studio only)
+1. Navigate to the root directory of the project 
+    
+    Run 
+    ```sh
+    .\CG_SetUpW.bat
+    ```
+    ##### OR 
+    double click on `CG_SetUpW.bat` 
+
+
+2. When prompted, select the Premake (by typing 'p' or 'P' and pressing Enter)
+
+3. Open the generated Visual Studio solution file `ComputerGraphics.sln` in Visual Studio
+
+4. Build and run the project
+
+#### Linux
+1. Navigate to the root directory of the project
+2. Run 
+    ```sh
+    .\Premake-Linux.sh
+    ```
+3. When prompted, select the Premake (by typing 'p' or 'P' and pressing Enter)
+4. Build the project by running make
+    ```sh
+    make
+    ```
+5. Run the project
+    ```sh
+    ./src/Debug/CG
+    ```
+### If you choose CMake Configuration
+#### Windows (preferably Visual Studio Code) 
+1. Navigate to the root directory of the project
+2. Run 
+    ```sh
+    .\CG_SetUpW.bat
+    ```
+3. When prompted, select the CMake (by typing 'c' or 'C' and pressing Enter)
+4. Open the project in Visual Studio Code
+5. Configure the project using CMake Tools extension
+- From the command palette (Ctrl+Shift+P), select `CMake: Configure`
+- Select the build system (e.g. `Visual Studio 16 2019`)
+- Build the project by selecting `CMake: Build`
+- Run the project by selecting `CMake: Run`
+
+#### Linux
+1. Navigate to the root directory of the project
+2. Run 
+    ```sh
+    sudo chmod +x CG_SetUpLM.sh
+    ```
+3. Run 
+    ```sh
+    ./CG_SetUpLM.sh
+    ```
+4. When prompted, select the CMake (by typing 'c' or 'C' and pressing Enter)
+5. Build and Run the project
+    ```sh
+    cd build
+    make
+    cd ..
+    ./build/src/Project
+    ```
+6. (optional) you can also use Visual Studio Code to build and run the project
+    - Open the project in Visual Studio Code
+    - Configure the project using CMake Tools extension (Ctrl+Shift+P -> CMake: Configure)
+    - Build the project (Ctrl+Shift+P -> CMake: Build)
+    - Run the project (Ctrl+Shift+P -> CMake: Run)
+
+#### MacOS
+1. Navigate to the root directory of the project
+2. Run 
+    ```sh
+    chmod +x CG_SetUpLM.sh
+    ```
+3. Run 
+    ```sh
+    ./CG_SetUpLM.sh
+    ```
+4. When prompted, select the CMake (by typing 'c' or 'C' and pressing Enter)
+5. Build and Run the project using Visual Studio Code
+    - Open the project in Visual Studio Code
+    - Configure the project using CMake Tools extension (Ctrl+Shift+P -> CMake: Configure)
+    - Build the project (Ctrl+Shift+P -> CMake: Build)
+    - Run the project (Ctrl+Shift+P -> CMake: Run)
+
 ## How to Build the Project Using Premake
 
 Just run one of the following script files based on your operating system:
