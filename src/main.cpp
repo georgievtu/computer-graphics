@@ -95,6 +95,11 @@ GLFWwindow* init_window(void)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
     /*
+     * Multisampling.
+     */
+    glfwWindowHint(GLFW_SAMPLES, 4);
+
+    /*
      * Create the graphics context and make it current.
      */
     GLFWwindow* const window = glfwCreateWindow(cg::window.window_width,
@@ -300,9 +305,10 @@ static void set_pvm(unsigned int program, glm::mat4 pvm)
 static void init(void)
 {
     /*
-     * Enable z-buffer.
+     * Enable z-buffer and multisampling.
      */
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
 
     std::array vertices
     {
