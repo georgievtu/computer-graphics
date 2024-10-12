@@ -18,8 +18,11 @@ constexpr auto clear_color = glm::vec4(0.45f, 0.55f, 0.60f, 0.90f);
 /*
  * Globals. For convenience.
  */
-static glm::mat4 g_model = glm::mat4(1.0f);
 static unsigned int g_program = 0;
+static glm::mat4 g_model = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
+                                     0.0f, 1.0f, 0.0f, 0.0f,
+                                     0.0f, 0.0f, 1.0f, 0.0f,
+                                     0.0f, 0.0f, 0.0f, 1.0f);
 
 /*
  * Forward declarations.
