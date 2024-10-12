@@ -6,7 +6,7 @@
 
 #include "GLFW/glfw3.h"
 
-#include "config.h"
+#include "structs.h"
 
 #include <array>
 #include <fstream>
