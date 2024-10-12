@@ -1,11 +1,6 @@
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
-
 #include "glad/glad.h"
 
-#include "GLFW/glfw3.h"
-
+#include "ui.h"
 #include "structs.h"
 
 #include <array>
@@ -129,25 +124,6 @@ GLFWwindow* init_window(void)
     return window;
 }
 
-static void init_ImGui(GLFWwindow* window)
-{
-    /*
-     * ImGui context.
-     */
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-
-    /*
-     * ImGui style.
-     */
-    ImGui::StyleColorsDark();
-
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(cg::version.glsl_version);
-}
-
 static void reset_viewport(GLFWwindow* window)
 {
     int display_w = 0;
@@ -163,34 +139,6 @@ static void clear(void)
                  clear_color.z * clear_color.w,
                  clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-static void render_ImGui(void)
-{
-    bool show_demo_window = true;
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-
-    if (show_demo_window == true)
-    {
-        ImGui::ShowDemoWindow(&show_demo_window);
-    }
-
-    ImGui::Render();
-}
-
-static void display_ImGui(void)
-{
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-static void cleanup_ImGui(void)
-{
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 }
 
 static void cleanup_window(GLFWwindow* window)
@@ -434,7 +382,7 @@ static void run(void)
     if (window == nullptr)
         std::exit(1);
 
-    init_ImGui(window);
+    cg::init_ImGui(window);
     init();
 
     /*
@@ -445,7 +393,7 @@ static void run(void)
     {
         glfwPollEvents();
 
-        render_ImGui();
+        cg::render_ImGui();
 
         reset_viewport(window);
 
@@ -453,7 +401,7 @@ static void run(void)
 
         render();
 
-        display_ImGui();
+        cg::display_ImGui();
 
         glfwSwapBuffers(window);
     }
@@ -461,7 +409,7 @@ static void run(void)
     /*
      * Cleanup.
      */
-    cleanup_ImGui();
+    cg::cleanup_ImGui();
     cleanup_window(window);
 }
 
