@@ -22,7 +22,7 @@ void init_ImGui(GLFWwindow* window)
 
 void render_ImGui(void)
 {
-    bool show_demo_window = true;
+    bool show_demo_window = false;
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
