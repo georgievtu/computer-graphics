@@ -1,5 +1,5 @@
-#ifndef CG_CONFIG
-#define CG_CONFIG
+#ifndef CG_STRUCTS
+#define CG_STRUCTS
 
 #include "glm/ext.hpp"
 
