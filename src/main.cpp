@@ -112,6 +112,7 @@ GLFWwindow* init_window(void)
         return nullptr;
 
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
 
     /*
      * Set event callbacks.
