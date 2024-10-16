@@ -15,10 +15,12 @@ endif()
 
 set(sourceFiles
     main.cpp
+    structs.cpp
+    ui.cpp
 )
 
 add_executable(Project ${sourceFiles})
 
-target_include_directories(Project PRIVATE include)
+target_include_directories(Project PRIVATE ${CMAKE_SOURCE_DIR})
 
 target_link_libraries(Project PRIVATE glad glfw imgui glm)
