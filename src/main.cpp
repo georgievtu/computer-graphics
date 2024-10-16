@@ -70,6 +70,8 @@ static void key_callback(GLFWwindow* window,
 
 static void size_callback(GLFWwindow* window, int width, int height)
 {
+    if (width == 0 || height == 0)
+        return;
     cg::perspective.aspect = static_cast<float>(width) / height;
     set_pvm(g_program, recalculate_pvm());
 };
