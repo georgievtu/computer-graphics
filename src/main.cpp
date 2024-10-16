@@ -358,14 +358,6 @@ static void init(void)
     g_program = program;
 
     /*
-     * Model transform.
-     * Order of operations is important.
-     */
-    //g_model = glm::scale(g_model, glm::vec3(1.0f, 1.0f, 1.0f));
-    //g_model = glm::rotate(g_model, 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    //g_model = glm::translate(g_model, glm::vec3(0.0f, 0.5f, 0.0f));
-
-    /*
      * Set PVM matrix.
      */
     set_pvm(program, recalculate_pvm());
