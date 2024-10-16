@@ -16,7 +16,9 @@ libs/Makefile
 # ImGui
 imgui.ini
 
+# Editors
 .vscode
+.cache
 compile_commands.json
 
 # CMake

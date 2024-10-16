@@ -1,30 +1,29 @@
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
-
 #include "glad/glad.h"
 
-#include "GLFW/glfw3.h"
-
-#include "glm/ext.hpp"
-
-#include "config.h"
+#include "ui.h"
+#include "structs.h"
 
 #include <array>
 #include <fstream>
 #include <iostream>
 #include <optional>
 
-cg::Window _window;
-cg::Camera _camera;
-
-constexpr auto window_width = 1280;
-constexpr auto window_height = 720;
-constexpr auto window_title = "OpenGL";
-constexpr auto gl_major = 4;
-constexpr auto gl_minor = 1;
-constexpr auto glsl_version = "#version 410";
 constexpr auto clear_color = glm::vec4(0.45f, 0.55f, 0.60f, 0.90f);
+
+/*
+ * Globals. For convenience.
+ */
+static unsigned int g_program = 0;
+static glm::mat4 g_model = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
+                                     0.0f, 1.0f, 0.0f, 0.0f,
+                                     0.0f, 0.0f, 1.0f, 0.0f,
+                                     0.0f, 0.0f, 0.0f, 1.0f);
+
+/*
+ * Forward declarations.
+ */
+static void set_pvm(unsigned int program, glm::mat4 pvm);
+static glm::mat4 recalculate_pvm();
 
 static unsigned int gl_print_error(void)
 {
@@ -52,10 +51,28 @@ static void key_callback(GLFWwindow* window,
         case GLFW_KEY_ESCAPE:
             glfwSetWindowShouldClose(window, true);
             break;
+        case GLFW_KEY_A:
+            g_model = glm::rotate(g_model,
+                                  glm::radians<float>(5.0f),
+                                  glm::vec3(0.0f, 1.0f, 0.0f));
+            set_pvm(g_program, recalculate_pvm());
+            break;
+        case GLFW_KEY_D:
+            break;
+        case GLFW_KEY_W:
+            break;
+        case GLFW_KEY_S:
+            break;
         default:
             break;
     }
 }
+
+static void size_callback(GLFWwindow* window, int width, int height)
+{
+    cg::perspective.aspect = static_cast<float>(width) / height;
+    set_pvm(g_program, recalculate_pvm());
+};
 
 GLFWwindow* init_window(void)
 {
@@ -67,17 +84,22 @@ GLFWwindow* init_window(void)
     /*
      * Required for Apple.
      */
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_major);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_minor);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, cg::version.gl_major);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, cg::version.gl_minor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
     /*
+     * Multisampling.
+     */
+    glfwWindowHint(GLFW_SAMPLES, 4);
+
+    /*
      * Create the graphics context and make it current.
      */
-    GLFWwindow* const window = glfwCreateWindow(window_width,
-                                                window_height,
-                                                window_title,
+    GLFWwindow* const window = glfwCreateWindow(cg::window.window_width,
+                                                cg::window.window_height,
+                                                cg::window.window_title,
                                                 nullptr,
                                                 nullptr);
 
@@ -85,11 +107,13 @@ GLFWwindow* init_window(void)
         return nullptr;
 
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
 
     /*
      * Set event callbacks.
      */
     glfwSetKeyCallback(window, key_callback);
+    glfwSetWindowSizeCallback(window, size_callback);
 
     /*
      * Load OpenGL with GLAD.
@@ -98,25 +122,6 @@ GLFWwindow* init_window(void)
     gladLoadGL();
 
     return window;
-}
-
-static void init_ImGui(GLFWwindow* window)
-{
-    /*
-     * ImGui context.
-     */
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-
-    /*
-     * ImGui style.
-     */
-    ImGui::StyleColorsDark();
-
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
 static void reset_viewport(GLFWwindow* window)
@@ -134,34 +139,6 @@ static void clear(void)
                  clear_color.z * clear_color.w,
                  clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-static void render_ImGui(void)
-{
-    bool show_demo_window = true;
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-
-    if (show_demo_window == true)
-    {
-        ImGui::ShowDemoWindow(&show_demo_window);
-    }
-
-    ImGui::Render();
-}
-
-static void display_ImGui(void)
-{
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-static void cleanup_ImGui(void)
-{
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 }
 
 static void cleanup_window(GLFWwindow* window)
@@ -254,12 +231,33 @@ static unsigned int create_shader(const std::string& vertex_source,
     return program;
 }
 
+static glm::mat4 recalculate_pvm()
+{
+    glm::mat4 projection = glm::perspective(cg::perspective.fov,
+                                            cg::perspective.aspect,
+                                            cg::perspective.z_near,
+                                            cg::perspective.z_far);
+
+    glm::mat4 view = glm::lookAt(cg::camera.eye,
+                                 cg::camera.center,
+                                 cg::camera.up);
+
+    return projection * view * g_model;
+}
+
+static void set_pvm(unsigned int program, glm::mat4 pvm)
+{
+    unsigned int u_pvm = glGetUniformLocation(program, "u_pvm");
+    glUniformMatrix4fv(u_pvm, 1, GL_TRUE, glm::value_ptr(pvm));
+}
+
 static void init(void)
 {
     /*
-     * Enable z-buffer.
+     * Enable z-buffer and multisampling.
      */
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
 
     std::array vertices
     {
@@ -357,39 +355,20 @@ static void init(void)
     }
 
     glUseProgram(program);
+    g_program = program;
 
     /*
-     * Projection.
-     * FOV, Aspect, Z_NEAR, Z_FAR
-     */
-    glm::mat4 projection = glm::perspective(45.0f, 4.0f/3.0f, 1.0f, 100.0f);
-
-    /*
-     * View.
-     * Eye not in the center so we are outside the object.
-     * Center at 0.
-     * Up = y direction.
-     */
-    glm::vec3 eye = glm::vec3(0.0f, 0.0f, 5.0f);
-    glm::vec3 center = glm::vec3(0.0f);
-    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-    glm::mat4 view = glm::lookAt(eye, center, up);
-
-    /*
-     * Model.
+     * Model transform.
      * Order of operations is important.
      */
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-    model = glm::rotate(model, 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
+    //g_model = glm::scale(g_model, glm::vec3(1.0f, 1.0f, 1.0f));
+    //g_model = glm::rotate(g_model, 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    //g_model = glm::translate(g_model, glm::vec3(0.0f, 0.5f, 0.0f));
 
     /*
      * Set PVM matrix.
      */
-    glm::mat4 pvm = projection * view * model;
-    unsigned int u_pvm = glGetUniformLocation(program, "u_pvm");
-    glUniformMatrix4fv(u_pvm, 1, GL_TRUE, glm::value_ptr(pvm));
+    set_pvm(program, recalculate_pvm());
 }
 
 static void render(void)
@@ -403,7 +382,7 @@ static void run(void)
     if (window == nullptr)
         std::exit(1);
 
-    init_ImGui(window);
+    cg::init_ImGui(window);
     init();
 
     /*
@@ -414,7 +393,7 @@ static void run(void)
     {
         glfwPollEvents();
 
-        render_ImGui();
+        cg::render_ImGui();
 
         reset_viewport(window);
 
@@ -422,7 +401,7 @@ static void run(void)
 
         render();
 
-        display_ImGui();
+        cg::display_ImGui();
 
         glfwSwapBuffers(window);
     }
@@ -430,7 +409,7 @@ static void run(void)
     /*
      * Cleanup.
      */
-    cleanup_ImGui();
+    cg::cleanup_ImGui();
     cleanup_window(window);
 }
 
