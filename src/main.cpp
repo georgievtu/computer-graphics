@@ -72,6 +72,8 @@ static void size_callback(GLFWwindow* window, int width, int height)
 {
     if (width == 0 || height == 0)
         return;
+
+    glViewport(0, 0, width, height);
     cg::perspective.aspect = static_cast<float>(width) / height;
     set_pvm(g_program, recalculate_pvm());
 };
@@ -124,14 +126,6 @@ GLFWwindow* init_window(void)
     gladLoadGL();
 
     return window;
-}
-
-static void reset_viewport(GLFWwindow* window)
-{
-    int display_w = 0;
-    int display_h = 0;
-    glfwGetFramebufferSize(window, &display_w, &display_h);
-    glViewport(0, 0, display_w, display_h);
 }
 
 static void clear(void)
@@ -388,8 +382,6 @@ static void run(void)
         glfwPollEvents();
 
         cg::render_ImGui();
-
-        reset_viewport(window);
 
         clear();
 
