@@ -20,3 +20,12 @@ imgui.ini
 .vscode
 .cache
 compile_commands.json
+
+# CMake
+build/
+
+# macOS
+**/*.xcodeproj
+**/*.xcworkspace
+**/*.xcuserdatad
+.DS_Store
