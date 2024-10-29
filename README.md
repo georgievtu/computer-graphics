@@ -70,7 +70,7 @@ Currently not supported with Premake. See [CMake](#cmake) to build for Mac.
     brew install cmake
     ```
 
-#### Visual Studio (All platforms)
+#### Visual Studio Code (All platforms)
 
 - **Requires CMake and a compiler installed and set on path**
 1. Install Visual Studio Code from [here](https://code.visualstudio.com/).
