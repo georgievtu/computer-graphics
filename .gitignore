@@ -1,3 +1,4 @@
+# Build
 bin/
 obj/
 
@@ -13,6 +14,12 @@ libs/Makefile
 **/*.vcxproj.filters
 .vs/
 
+# Mac
+**/*.xcodeproj
+**/*.xcworkspace
+**/*.xcuserdatad
+.DS_Store
+
 # ImGui
 imgui.ini
 
@@ -24,8 +31,3 @@ compile_commands.json
 # CMake
 build/
 
-# macOS
-**/*.xcodeproj
-**/*.xcworkspace
-**/*.xcuserdatad
-.DS_Store
