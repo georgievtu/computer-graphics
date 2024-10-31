@@ -19,8 +19,8 @@ Template project for computer graphics labs for TU Sofia.
 ## Build
 
 Supports Premake and CMake:
-- Premake works with Visual Studio and GNU Make. No additional downloads required.
-- CMake works with Visual Studio Code (*CMake Tools extension recommended*). **CMake must be [installed](https://cmake.org/download/) seperately. A C/C++ compiler must also be installed and set on the system path.**
+- Premake works with Visual Studio and GNU Make. **No additional downloads required**.
+- CMake works with Visual Studio Code (*CMake Tools extension recommended*). **CMake must be [installed](https://cmake.org/download/) seperately. A C/C++ compiler must also be installed and set on the system path. [Python](https://www.python.org/downloads/) is required to fetch the dependencies.**
 
 **(OPTIONAL)** Run `CMakeSetup-Windows.bat` OR `CMakeSetup-LinuxAndMac.sh` and select your desired build system.
 
