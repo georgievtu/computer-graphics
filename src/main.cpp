@@ -255,49 +255,78 @@ static void init(void)
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
 
-    std::array vertices
+    /*
+     * Cube.
+     */
+    std::array<float, 288> vertices =
     {
-        -0.5f,-0.5f,-0.5f,
-        -0.5f,-0.5f, 0.5f,
-        -0.5f, 0.5f, 0.5f,
-         0.5f, 0.5f,-0.5f,
-        -0.5f,-0.5f,-0.5f,
-        -0.5f, 0.5f,-0.5f,
+    /* Position            Normal                Texture Coords */
+    /* Front face */
+    -0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f, 1.0f,
 
-         0.5f,-0.5f, 0.5f,
-        -0.5f,-0.5f,-0.5f,
-         0.5f,-0.5f,-0.5f,
-         0.5f, 0.5f,-0.5f,
-         0.5f,-0.5f,-0.5f,
-        -0.5f,-0.5f,-0.5f,
+     0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f, 0.0f,
 
-        -0.5f,-0.5f,-0.5f,
-        -0.5f, 0.5f, 0.5f,
-        -0.5f, 0.5f,-0.5f,
-         0.5f,-0.5f, 0.5f,
-        -0.5f,-0.5f, 0.5f,
-        -0.5f,-0.5f,-0.5f,
+    /* Back face */
+    -0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f, 1.0f,
 
-        -0.5f, 0.5f, 0.5f,
-        -0.5f,-0.5f, 0.5f,
-         0.5f,-0.5f, 0.5f,
-         0.5f, 0.5f, 0.5f,
-         0.5f,-0.5f,-0.5f,
-         0.5f, 0.5f,-0.5f,
+     0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f, 0.0f,
 
-         0.5f,-0.5f,-0.5f,
-         0.5f, 0.5f, 0.5f,
-         0.5f,-0.5f, 0.5f,
-         0.5f, 0.5f, 0.5f,
-         0.5f, 0.5f,-0.5f,
-        -0.5f, 0.5f,-0.5f,
+    /* Left face */
+    -0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
 
-         0.5f, 0.5f, 0.5f,
-        -0.5f, 0.5f,-0.5f,
-        -0.5f, 0.5f, 0.5f,
-         0.5f, 0.5f, 0.5f,
-        -0.5f, 0.5f, 0.5f,
-         0.5f,-0.5f, 0.5f
+    -0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
+
+    /* Right face */
+     0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
+
+     0.5f,  0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
+
+    /* Top face */
+    -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f, 1.0f,
+
+     0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   0.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f, 0.0f,
+
+    /* Bottom face */
+    -0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   1.0f, 1.0f,
+
+     0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   1.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 0.0f
+    };
+
+    /*
+     * Index array for drawing the cube with IBO
+     */
+    std::array<unsigned int, 36> indices =
+    {
+        0,  1,  2,   2,  3,  0,  /* Front face */
+        4,  5,  6,   6,  7,  4,  /* Back face */
+        8,  9,  10,  10, 11, 8,  /* Left face */
+        12, 13, 14,  14, 15, 12, /* Right face */
+        16, 17, 18,  18, 19, 16, /* Top face */
+        20, 21, 22,  22, 23, 20  /* Bottom face */
     };
 
     std::array triangle
@@ -322,8 +351,23 @@ static void init(void)
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
+    /*
+     * Position attribute.
+     */
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    /*
+     * Normal attribute.
+     */
+    glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    /*
+     * Texture coordinate attribute.
+     */
+    glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     std::cout << "Data init check:" << std::endl;
     if (gl_print_error() != 0)
