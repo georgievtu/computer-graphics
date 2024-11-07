@@ -2,6 +2,7 @@
 
 #include "ui.h"
 #include "structs.h"
+#include "vendor/stb_image.h"
 
 #include <array>
 #include <fstream>
@@ -386,6 +387,18 @@ static void init(void)
         std::cerr << "Failed to compile shaders." << std::endl;
         return;
     }
+
+    int texture_width = 0;
+    int texture_height= 0;
+    int texture_channels = 0;
+
+    unsigned char* texture_data = stbi_load("resources/textures/logo.png",
+                                            &texture_width,
+                                            &texture_height,
+                                            &texture_channels,
+                                            0);
+
+    stbi_image_free(texture_data);
 
     glUseProgram(program);
     g_program = program;
