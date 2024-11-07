@@ -8,6 +8,9 @@
 #include <iostream>
 #include <optional>
 
+/*
+ * Constants.
+ */
 constexpr auto clear_color = glm::vec4(0.45f, 0.55f, 0.60f, 0.90f);
 
 /*
@@ -317,18 +320,8 @@ static void init(void)
     };
 
     /*
-     * Index array for drawing the cube with IBO
+     * Triangle.
      */
-    std::array<unsigned int, 36> indices =
-    {
-        0,  1,  2,   2,  3,  0,  /* Front face */
-        4,  5,  6,   6,  7,  4,  /* Back face */
-        8,  9,  10,  10, 11, 8,  /* Left face */
-        12, 13, 14,  14, 15, 12, /* Right face */
-        16, 17, 18,  18, 19, 16, /* Top face */
-        20, 21, 22,  22, 23, 20  /* Bottom face */
-    };
-
     std::array triangle
     {
         -0.5f, -0.5f, 0.0f,
