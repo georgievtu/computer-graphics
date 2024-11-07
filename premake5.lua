@@ -25,7 +25,7 @@ project "CG"
     -- TODO seperate "include/" dir?
     includedirs { "dependencies/GLAD/include/", "dependencies/GLFW/include", "dependencies/GLM/", "dependencies/IMGUI" }
 
-    files { "src/*.cpp", "src/*.h", "resources/**" }
+    files { "src/*.cpp", "src/vendor/*.cpp ", "src/*.h", "resources/**" }
 
     links { "GLFW", "GLM", "GLAD", "ImGui" }
 
