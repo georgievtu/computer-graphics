@@ -14,6 +14,7 @@ if(MSVC)
 endif()
 
 set(sourceFiles
+    vendor/stb_image.cpp
     main.cpp
     structs.cpp
     ui.cpp
