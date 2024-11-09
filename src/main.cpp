@@ -29,6 +29,9 @@ static glm::mat4 g_model = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
 static void set_pvm(unsigned int program, glm::mat4 pvm);
 static glm::mat4 recalculate_pvm();
 
+/*
+ * Checks for OpenGL errors.
+ */
 static unsigned int gl_print_error(void)
 {
     unsigned int error = glGetError();
@@ -39,11 +42,17 @@ static unsigned int gl_print_error(void)
     return error;
 }
 
+/*
+ * Window error event callback.
+ */
 static void glfw_error_callback(int error, const char* description)
 {
     std::cerr << "GLFW Error: " << error << " " << description << std::endl;
 }
 
+/*
+ * Window keypress event callback.
+ */
 static void key_callback(GLFWwindow* window,
                          int key,
                          int scancode,
@@ -72,6 +81,9 @@ static void key_callback(GLFWwindow* window,
     }
 }
 
+/*
+ * Window resize event callback.
+ */
 static void size_callback(GLFWwindow* window, int width, int height)
 {
     if (width == 0 || height == 0)
@@ -82,6 +94,9 @@ static void size_callback(GLFWwindow* window, int width, int height)
     set_pvm(g_program, recalculate_pvm());
 };
 
+/*
+ * Create window.
+ */
 GLFWwindow* init_window(void)
 {
     glfwSetErrorCallback(glfw_error_callback);
@@ -115,6 +130,10 @@ GLFWwindow* init_window(void)
         return nullptr;
 
     glfwMakeContextCurrent(window);
+
+    /*
+     * Enable VSync.
+     */
     glfwSwapInterval(1);
 
     /*
@@ -132,6 +151,9 @@ GLFWwindow* init_window(void)
     return window;
 }
 
+/*
+ * Clear color and depth buffers.
+ */
 static void clear(void)
 {
     glClearColor(clear_color.x * clear_color.w,
@@ -141,12 +163,18 @@ static void clear(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+/*
+ * Destroy window.
+ */
 static void cleanup_window(GLFWwindow* window)
 {
     glfwDestroyWindow(window);
     glfwTerminate();
 }
 
+/*
+ * Read shader from file.
+ */
 static std::optional<std::string> read_shader(const std::string& path)
 {
     std::string result;
@@ -169,6 +197,7 @@ static std::optional<std::string> read_shader(const std::string& path)
 }
 
 /*
+ * Compile shader.
  * Copy the shader source string here just in case.
  * c_str will point to garbage if a string reference goes out of scope.
  */
@@ -206,6 +235,9 @@ static unsigned int compile_shader(const std::string shader_source,
     return shader;
 }
 
+/*
+ * Compile and link shader program.
+ */
 static unsigned int create_shader(const std::string& vertex_source,
                                   const std::string& fragment_source)
 {
@@ -231,6 +263,10 @@ static unsigned int create_shader(const std::string& vertex_source,
     return program;
 }
 
+/*
+ * Reset projection view model matrix.
+ * Uses global camera and perspective structs.
+ */
 static glm::mat4 recalculate_pvm()
 {
     glm::mat4 projection = glm::perspective(cg::perspective.fov,
@@ -245,12 +281,19 @@ static glm::mat4 recalculate_pvm()
     return projection * view * g_model;
 }
 
+/*
+ * Set projection view model matrix uniform.
+ */
 static void set_pvm(unsigned int program, glm::mat4 pvm)
 {
     unsigned int u_pvm = glGetUniformLocation(program, "u_pvm");
     glUniformMatrix4fv(u_pvm, 1, GL_TRUE, glm::value_ptr(pvm));
 }
 
+/*
+ * Vertex buffer object.
+ * Uploads draw data to GPU memory.
+ */
 static unsigned int init_vbo()
 {
     /*
@@ -314,19 +357,6 @@ static unsigned int init_vbo()
     -0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 0.0f
     };
 
-    /*
-     * Triangle.
-     */
-    std::array triangle
-    {
-        -0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f
-    };
-
-    /*
-     * Load draw data to the GPU memory.
-     */
     unsigned int vbo = 0;
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -335,11 +365,12 @@ static unsigned int init_vbo()
     return vbo;
 }
 
+/*
+ * Vertex array object.
+ * Specifies the format of the draw data.
+ */
 static unsigned int init_vao()
 {
-    /*
-     * Specify the format of the data.
-     */
     unsigned int vao = 0;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -365,6 +396,9 @@ static unsigned int init_vao()
     return vao;
 }
 
+/*
+ * Load and bind texture image.
+ */
 static unsigned int init_texture(const std::string& path)
 {
     int texture_width = 0;
@@ -416,12 +450,12 @@ static unsigned int init_texture(const std::string& path)
     return texture;
 }
 
+/*
+ * Shader setup.
+ */
 static unsigned int init_program(const std::string& vertex_path,
                                  const std::string& fragment_path)
 {
-    /*
-     * Setup shaders.
-     */
     const auto vertex_source = read_shader(vertex_path);
     const auto fragment_source = read_shader(fragment_path);
     if (vertex_source.has_value() == false ||
@@ -437,6 +471,9 @@ static unsigned int init_program(const std::string& vertex_path,
     return program;
 }
 
+/*
+ * Init scene.
+ */
 static void init(void)
 {
     /*
@@ -477,11 +514,17 @@ static void init(void)
     set_pvm(program, recalculate_pvm());
 }
 
+/*
+ * Draw function.
+ */
 static void render(void)
 {
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
+/*
+ * Create window and begin drawing.
+ */
 static void run(void)
 {
     GLFWwindow* window = init_window();
