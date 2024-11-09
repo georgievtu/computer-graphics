@@ -260,6 +260,12 @@ static void init(void)
     glEnable(GL_MULTISAMPLE);
 
     /*
+     * Blending.
+     */
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+
+    /*
      * Cube.
      */
     std::array<float, 288> vertices =
@@ -370,8 +376,8 @@ static void init(void)
     /*
      * Setup shaders.
      */
-    const auto vertex_source = read_shader("resources/shaders/vertex.glsl");
-    const auto fragment_source = read_shader("resources/shaders/fragment.glsl");
+    const auto vertex_source = read_shader("resources/shaders/tex_v.glsl");
+    const auto fragment_source = read_shader("resources/shaders/tex_f.glsl");
     if (vertex_source.has_value() == false ||
         fragment_source.has_value() == false)
     {
@@ -390,13 +396,47 @@ static void init(void)
 
     int texture_width = 0;
     int texture_height= 0;
-    int texture_channels = 0;
+    int texture_bpp = 0;
 
-    unsigned char* texture_data = stbi_load("resources/textures/logo.png",
+    stbi_set_flip_vertically_on_load(1);
+
+    unsigned char* texture_data = stbi_load("resources/textures/tu_white.png",
                                             &texture_width,
                                             &texture_height,
-                                            &texture_channels,
-                                            0);
+                                            &texture_bpp,
+                                            4);
+    if (texture_data == nullptr)
+    {
+        std::cerr << "Failed to load texture." << std::endl;
+        return;
+    }
+
+    unsigned int texture = 0;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    /*
+     * Texture wrapping and filtering.
+     * Required.
+     */
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGBA8,
+                 texture_width,
+                 texture_height,
+                 0,
+                 GL_RGBA,
+                 GL_UNSIGNED_BYTE,
+                 texture_data);
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
     stbi_image_free(texture_data);
 
