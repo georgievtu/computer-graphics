@@ -251,20 +251,8 @@ static void set_pvm(unsigned int program, glm::mat4 pvm)
     glUniformMatrix4fv(u_pvm, 1, GL_TRUE, glm::value_ptr(pvm));
 }
 
-static void init(void)
+static unsigned int init_vbo()
 {
-    /*
-     * Enable z-buffer and multisampling.
-     */
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_MULTISAMPLE);
-
-    /*
-     * Blending.
-     */
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-
     /*
      * Cube.
      */
@@ -344,6 +332,11 @@ static void init(void)
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
 
+    return vbo;
+}
+
+static unsigned int init_vao()
+{
     /*
      * Specify the format of the data.
      */
@@ -369,46 +362,27 @@ static void init(void)
     glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    std::cout << "Data init check:" << std::endl;
-    if (gl_print_error() != 0)
-        return;
+    return vao;
+}
 
-    /*
-     * Setup shaders.
-     */
-    const auto vertex_source = read_shader("resources/shaders/tex_v.glsl");
-    const auto fragment_source = read_shader("resources/shaders/tex_f.glsl");
-    if (vertex_source.has_value() == false ||
-        fragment_source.has_value() == false)
-    {
-        std::cerr << "Failed to read shaders." << std::endl;
-        return;
-    }
-
-    unsigned int program = create_shader(vertex_source.value(),
-                                         fragment_source.value());
-
-    if (program == 0)
-    {
-        std::cerr << "Failed to compile shaders." << std::endl;
-        return;
-    }
-
+static unsigned int init_texture(const std::string& path)
+{
     int texture_width = 0;
     int texture_height= 0;
     int texture_bpp = 0;
 
     stbi_set_flip_vertically_on_load(1);
 
-    unsigned char* texture_data = stbi_load("resources/textures/tu_white.png",
+    unsigned char* texture_data = stbi_load(path.c_str(),
                                             &texture_width,
                                             &texture_height,
                                             &texture_bpp,
                                             4);
+
     if (texture_data == nullptr)
     {
         std::cerr << "Failed to load texture." << std::endl;
-        return;
+        return 0;
     }
 
     unsigned int texture = 0;
@@ -439,6 +413,60 @@ static void init(void)
     glBindTexture(GL_TEXTURE_2D, texture);
 
     stbi_image_free(texture_data);
+    return texture;
+}
+
+static unsigned int init_program(const std::string& vertex_path,
+                                 const std::string& fragment_path)
+{
+    /*
+     * Setup shaders.
+     */
+    const auto vertex_source = read_shader(vertex_path);
+    const auto fragment_source = read_shader(fragment_path);
+    if (vertex_source.has_value() == false ||
+        fragment_source.has_value() == false)
+    {
+        std::cerr << "Failed to read shaders." << std::endl;
+        return 0;
+    }
+
+    unsigned int program = create_shader(vertex_source.value(),
+                                         fragment_source.value());
+
+    return program;
+}
+
+static void init(void)
+{
+    /*
+     * Enable z-buffer and multisampling.
+     */
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
+
+    /*
+     * Blending. For transparency.
+     */
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+
+    unsigned int vbo = init_vbo();
+    unsigned int vao = init_vao();
+    unsigned int texture = init_texture("resources/textures/tu_white.png");
+
+    std::cout << "Data init check:" << std::endl;
+    if (gl_print_error() != 0)
+        return;
+
+    unsigned int program = init_program("resources/shaders/tex_v.glsl",
+                                        "resources/shaders/tex_f.glsl");
+
+    if (program == 0)
+    {
+        std::cerr << "Failed to compile shaders." << std::endl;
+        return;
+    }
 
     glUseProgram(program);
     g_program = program;
