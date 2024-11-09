@@ -76,7 +76,7 @@ ask_choice() {
             ;;
         P)
             echo "You chose Premake."
-            
+
             # Delete CMakeLists.txt from the current folder
             if [ -f "CMakeLists.txt" ]; then
                 rm CMakeLists.txt
@@ -117,19 +117,19 @@ ask_choice() {
     esac
 
     # Delete the setup and related files
-    if [ -f "CG_SetUpW.bat" ]; then
-        rm CG_SetUpW.bat
-        echo "CG_SetUpW.bat deleted."
+    if [ -f "CMake-Setup-Windows.bat" ]; then
+        rm CMake-Setup-Windows.bat
+        echo "CMake-Setup-Windows.bat deleted."
     else
-        echo "CG_SetUpW.bat not found."
+        echo "CMake-Setup-Windows.bat not found."
     fi
 
-    #Delete The CG_SetUpLM.sh
-    if [ -f "CG_SetUpLM.sh" ]; then
-        rm CG_SetUpLM.sh
-        echo "CG_SetUpLM.sh deleted."
+    # Delete the setup and related files
+    if [ -f "CMake-Setup-LinuxAndMac.sh" ]; then
+        rm CMake-Setup-LinuxAndMac.sh
+        echo "CMake-Setup-LinuxAndMac.sh deleted."
     else
-        echo "CG_SetUpLM.sh not found."
+        echo "CMake-Setup-LinuxAndMac.sh not found."
     fi
 
 }
