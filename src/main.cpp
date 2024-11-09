@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <optional>
+#include <unordered_map>
 
 /*
  * Constants.
@@ -17,6 +18,7 @@ constexpr auto clear_color = glm::vec4(0.45f, 0.55f, 0.60f, 0.90f);
 /*
  * Globals. For convenience.
  */
+static std::unordered_map<std::string, int> g_uniform_locations;
 static unsigned int g_program = 0;
 static glm::mat4 g_model = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
                                      0.0f, 1.0f, 0.0f, 0.0f,
@@ -274,11 +276,25 @@ static unsigned int create_shader(const std::string& vertex_source,
     return program;
 }
 
+int get_uniform_location(unsigned int program, const std::string& location)
+{
+    if (g_uniform_locations.find(location) != g_uniform_locations.end())
+        return g_uniform_locations[location];
+
+    int uniform = glGetUniformLocation(program, location.c_str());
+    if (uniform == -1)
+        std::cout << "Warning: Uniform " << location <<
+        " does not exist. This uniform will not be set." << std::endl;
+
+    g_uniform_locations[location] = uniform;
+    return uniform;
+}
+
 static void set_vec3(unsigned int program,
                      const glm::vec3& vector,
                      const std::string& location)
 {
-    int uniform = glGetUniformLocation(program, location.c_str());
+    int uniform = get_uniform_location(program, location);
     glUniform3fv(uniform, 1, glm::value_ptr(vector));
 }
 
@@ -286,7 +302,7 @@ static void set_matrix(unsigned int program,
                        const glm::mat4& matrix,
                        const std::string& location)
 {
-    int uniform = glGetUniformLocation(program, location.c_str());
+    int uniform = get_uniform_location(program, location);
     glUniformMatrix4fv(uniform, 1, false, glm::value_ptr(matrix));
 }
 
