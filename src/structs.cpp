@@ -23,7 +23,7 @@ const Window window =
  */
 Perspective perspective =
 {
-    .fov = 45.0f,
+    .fov = glm::radians(45.0f),
     .aspect = static_cast<float>(window.window_width) / window.window_height,
     .z_near = 1.0f,
     .z_far = 100.0f
