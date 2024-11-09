@@ -278,7 +278,7 @@ static void set_vec3(unsigned int program,
                      const glm::vec3& vector,
                      const std::string& location)
 {
-    unsigned int uniform = glGetUniformLocation(program, location.c_str());
+    int uniform = glGetUniformLocation(program, location.c_str());
     glUniform3fv(uniform, 1, glm::value_ptr(vector));
 }
 
@@ -286,7 +286,7 @@ static void set_matrix(unsigned int program,
                        const glm::mat4& matrix,
                        const std::string& location)
 {
-    unsigned int uniform = glGetUniformLocation(program, location.c_str());
+    int uniform = glGetUniformLocation(program, location.c_str());
     glUniformMatrix4fv(uniform, 1, false, glm::value_ptr(matrix));
 }
 
@@ -546,8 +546,8 @@ static void init(void)
     if (gl_print_error() != 0)
         return;
 
-    unsigned int program = init_program("resources/shaders/phong_v.glsl",
-                                        "resources/shaders/phong_f.glsl");
+    unsigned int program = init_program("resources/shaders/tex_v.glsl",
+                                        "resources/shaders/tex_f.glsl");
 
     if (program == 0)
     {
