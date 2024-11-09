@@ -23,12 +23,17 @@ static glm::mat4 g_model = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
                                      0.0f, 0.0f, 1.0f, 0.0f,
                                      0.0f, 0.0f, 0.0f, 1.0f);
 
+static glm::vec3 g_light_pos = glm::vec3(1.0f, 1.0f, 2.0f);
+static glm::vec3 g_light_color = glm::vec3(1.0f); /* White light */
+
 /*
  * Forward declarations.
  */
 static void set_model(unsigned int);
 static void set_view(unsigned int);
 static void set_projection(unsigned int);
+static void set_light_pos(unsigned int);
+static void set_light_color(unsigned int);
 
 /*
  * Checks for OpenGL errors.
@@ -269,6 +274,14 @@ static unsigned int create_shader(const std::string& vertex_source,
     return program;
 }
 
+static void set_vec3(unsigned int program,
+                     const glm::vec3& vector,
+                     const std::string& location)
+{
+    unsigned int uniform = glGetUniformLocation(program, location.c_str());
+    glUniform3fv(uniform, 1, glm::value_ptr(vector));
+}
+
 static void set_matrix(unsigned int program,
                        const glm::mat4& matrix,
                        const std::string& location)
@@ -295,6 +308,7 @@ static void set_view(unsigned int program)
                                  cg::camera.up);
 
     set_matrix(program, view, "u_view");
+    set_vec3(program, cg::camera.eye, "u_view_pos");
 }
 
 /*
@@ -308,6 +322,22 @@ static void set_projection(unsigned int program)
                                             cg::perspective.z_far);
 
     set_matrix(program, projection, "u_projection");
+}
+
+/*
+ * Set light position.
+ */
+static void set_light_pos(unsigned int program)
+{
+    set_vec3(program, g_light_pos, "u_light_pos");
+}
+
+/*
+ * Set light color.
+ */
+static void set_light_color(unsigned int program)
+{
+    set_vec3(program, g_light_color, "u_light_color");
 }
 
 /*
@@ -516,8 +546,8 @@ static void init(void)
     if (gl_print_error() != 0)
         return;
 
-    unsigned int program = init_program("resources/shaders/tex_v.glsl",
-                                        "resources/shaders/tex_f.glsl");
+    unsigned int program = init_program("resources/shaders/phong_v.glsl",
+                                        "resources/shaders/phong_f.glsl");
 
     if (program == 0)
     {
@@ -534,6 +564,12 @@ static void init(void)
     set_model(program);
     set_view(program);
     set_projection(program);
+
+    /*
+     * Set light parameters.
+     */
+    set_light_pos(program);
+    set_light_color(program);
 }
 
 /*
