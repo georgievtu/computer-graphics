@@ -20,7 +20,7 @@ echo   .?YYYYYYYYYYYYYJ??7777777777777777777~    :G@@@@@@@@@@@@@#BGP555555555555
 echo    .!JYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY!    .J#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@B.
 echo      .!?YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY7.    :JB@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@J
 echo        .:~7JJYYYYYYYYYYYYYYYYYYYYYYYYYYYYYJ!.    .~JP##@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-echo            .:~~!7777777777777777777777777777.      .!7JY5PPPPPPPPPPPPPPPPPPPPPPPPPPPY 
+echo            .:~~!7777777777777777777777777777.      .!7JY5PPPPPPPPPPPPPPPPPPPPPPPPPPPY
 echo.
 :ask_choice
 set /p choice="Do you want to use CMake or Premake? (C/P): "
@@ -101,17 +101,17 @@ if /i "%choice%"=="C" (
     echo Invalid choice. Please enter C for CMake or P for Premake.
     goto ask_choice
 )
-if exist CG_SetUpW.bat (
-    del CG_SetUpW.bat
-    echo CG_SetUpW.bat deleted.
+if exist CMake-Setup-Windows.bat (
+    del CMake-Setup-Windows.bat
+    echo CMake-Setup-Windows.bat deleted.
 ) else (
-    echo CG_SetUpW.bat not found.
+    echo CMake-Setup-Windows.bat not found.
 )
-if exist CG_SetUpLM.sh (
-    del CG_SetUpLM.sh
-    echo CG_SetUpLM.sh deleted.
+if exist CMake-Setup-LinuxAndMac.sh (
+    del CMake-Setup-LinuxAndMac.sh
+    echo CMake-Setup-LinuxAndMac.sh deleted.
 ) else (
-    echo CG_SetUpLM.sh not found.
+    echo CMake-Setup-LinuxAndMac.sh not found.
 )
 echo.
 PAUSE
