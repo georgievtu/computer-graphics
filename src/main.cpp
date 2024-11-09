@@ -26,8 +26,9 @@ static glm::mat4 g_model = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
 /*
  * Forward declarations.
  */
-static void set_pvm(unsigned int program, glm::mat4 pvm);
-static glm::mat4 recalculate_pvm();
+static void set_model(unsigned int);
+static void set_view(unsigned int);
+static void set_projection(unsigned int);
 
 /*
  * Checks for OpenGL errors.
@@ -62,13 +63,18 @@ static void key_callback(GLFWwindow* window,
     switch (key)
     {
         case GLFW_KEY_ESCAPE:
+            /* Close on escape. */
             glfwSetWindowShouldClose(window, true);
+            break;
+        case GLFW_KEY_X:
+            /* For debugging. */
+            gl_print_error();
             break;
         case GLFW_KEY_A:
             g_model = glm::rotate(g_model,
-                                  glm::radians<float>(5.0f),
+                                  glm::radians(5.0f),
                                   glm::vec3(0.0f, 1.0f, 0.0f));
-            set_pvm(g_program, recalculate_pvm());
+            set_model(g_program);
             break;
         case GLFW_KEY_D:
             break;
@@ -91,7 +97,7 @@ static void size_callback(GLFWwindow* window, int width, int height)
 
     glViewport(0, 0, width, height);
     cg::perspective.aspect = static_cast<float>(width) / height;
-    set_pvm(g_program, recalculate_pvm());
+    set_projection(g_program);
 };
 
 /*
@@ -110,7 +116,7 @@ GLFWwindow* init_window(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, cg::version.gl_major);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, cg::version.gl_minor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
     /*
      * Multisampling.
@@ -263,38 +269,52 @@ static unsigned int create_shader(const std::string& vertex_source,
     return program;
 }
 
+static void set_matrix(unsigned int program,
+                       const glm::mat4& matrix,
+                       const std::string& location)
+{
+    unsigned int uniform = glGetUniformLocation(program, location.c_str());
+    glUniformMatrix4fv(uniform, 1, false, glm::value_ptr(matrix));
+}
+
 /*
- * Reset projection view model matrix.
- * Uses global camera and perspective structs.
+ * Set model matrix uniform.
  */
-static glm::mat4 recalculate_pvm()
+static void set_model(unsigned int program)
+{
+    set_matrix(program, g_model, "u_model");
+}
+
+/*
+ * Set view matrix uniform.
+ */
+static void set_view(unsigned int program)
+{
+    glm::mat4 view = glm::lookAt(cg::camera.eye,
+                                 cg::camera.center,
+                                 cg::camera.up);
+
+    set_matrix(program, view, "u_view");
+}
+
+/*
+ * Set projection matrix uniform.
+ */
+static void set_projection(unsigned int program)
 {
     glm::mat4 projection = glm::perspective(cg::perspective.fov,
                                             cg::perspective.aspect,
                                             cg::perspective.z_near,
                                             cg::perspective.z_far);
 
-    glm::mat4 view = glm::lookAt(cg::camera.eye,
-                                 cg::camera.center,
-                                 cg::camera.up);
-
-    return projection * view * g_model;
-}
-
-/*
- * Set projection view model matrix uniform.
- */
-static void set_pvm(unsigned int program, glm::mat4 pvm)
-{
-    unsigned int u_pvm = glGetUniformLocation(program, "u_pvm");
-    glUniformMatrix4fv(u_pvm, 1, GL_TRUE, glm::value_ptr(pvm));
+    set_matrix(program, projection, "u_projection");
 }
 
 /*
  * Vertex buffer object.
  * Uploads draw data to GPU memory.
  */
-static unsigned int init_vbo()
+static unsigned int init_vbo(void)
 {
     /*
      * Cube.
@@ -369,7 +389,7 @@ static unsigned int init_vbo()
  * Vertex array object.
  * Specifies the format of the draw data.
  */
-static unsigned int init_vao()
+static unsigned int init_vao(void)
 {
     unsigned int vao = 0;
     glGenVertexArrays(1, &vao);
@@ -511,7 +531,9 @@ static void init(void)
     /*
      * Set PVM matrix.
      */
-    set_pvm(program, recalculate_pvm());
+    set_model(program);
+    set_view(program);
+    set_projection(program);
 }
 
 /*
