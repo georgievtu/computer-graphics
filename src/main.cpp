@@ -295,6 +295,8 @@ static void set_vec3(unsigned int program,
                      const std::string& location)
 {
     int uniform = get_uniform_location(program, location);
+    if (uniform == -1)
+        return;
     glUniform3fv(uniform, 1, glm::value_ptr(vector));
 }
 
@@ -303,6 +305,8 @@ static void set_matrix(unsigned int program,
                        const std::string& location)
 {
     int uniform = get_uniform_location(program, location);
+    if (uniform == -1)
+        return;
     glUniformMatrix4fv(uniform, 1, false, glm::value_ptr(matrix));
 }
 
