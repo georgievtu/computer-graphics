@@ -20,10 +20,12 @@ constexpr auto clear_color = glm::vec4(0.45f, 0.55f, 0.60f, 0.90f);
  */
 static std::unordered_map<std::string, int> g_uniform_locations;
 static unsigned int g_program = 0;
-static glm::mat4 g_model = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
-                                     0.0f, 1.0f, 0.0f, 0.0f,
-                                     0.0f, 0.0f, 1.0f, 0.0f,
-                                     0.0f, 0.0f, 0.0f, 1.0f);
+static glm::mat4 g_model = glm::mat4(
+    1.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 1.0f
+);
 
 static glm::vec3 g_light_pos = glm::vec3(1.0f, 1.0f, 2.0f);
 static glm::vec3 g_light_color = glm::vec3(1.0f); /* White light */
