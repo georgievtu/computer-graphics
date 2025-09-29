@@ -71,7 +71,7 @@ ask_choice() {
             # Create build folder if not exists, go into it, run CMake
             [ ! -d "build" ] && mkdir build
             cd build
-            cmake ..
+            cmake .. -DCMAKE_POLICY_VERSION_MINIMUM=3.5
             cd ..
             ;;
         P)

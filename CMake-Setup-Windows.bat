@@ -64,7 +64,7 @@ if /i "%choice%"=="C" (
     if not exist build mkdir build
     cd build
     rem run cmake
-    cmake ..
+    cmake .. -DCMAKE_POLICY_VERSION_MINIMUM=3.5
     cd ..
 ) else if /i "%choice%"=="P" (
     echo You chose Premake.
