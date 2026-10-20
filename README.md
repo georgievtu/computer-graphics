@@ -1,6 +1,7 @@
 # Computer Graphics
 
-Template project for computer graphics labs for TU Sofia.
+Template project for computer graphics labs for TU Sofia.\
+This project is intended for **educational purposes** and does not represent best practices in regards to renderer architecture or C++/OpenGL usage.
 
 ## Requirements
 
@@ -54,8 +55,39 @@ Supports Premake and CMake:
     ./bin/Debug/CG
     ```
 
-#### MacOS
-Currently not supported with Premake. See [CMake](#cmake) to build for Mac.
+#### MacOS (Make)
+
+**Note**: The default build is configured to generate ARM64 code for Apple Silicon. For Intel Macs, edit the architecture in the `lua` files.
+
+1. Install a C/C++ compiler.\
+ **(RECOMMENDED)** Clang from Xcode command tools:
+    ```sh
+    % xcode-select --install 
+    ```
+2. Make the premake script executable:
+    ```sh
+    chmod +x Premake-Mac.sh
+    ```
+3. Run the premake script:
+    ```sh
+    ./Premake-Mac.sh
+    ```
+    **(IMPORTANT)** The premake script calls the `premake/premake5-mac` binary.\
+    It may be flagged as unverified and refuse to run on some machines.\
+    To allow it to execute run:
+    ```sh
+    xattr -d com.apple.quarantine premake/premake5-mac
+    ```
+    If you do not trust the provided binary, download Premake from [here](https://premake.github.io/).
+
+4. Build using make:
+    ```sh
+    make -j12
+    ```
+5. Run:
+    ```sh
+    ./bin/Debug/CG
+    ```
 
 <a name="cmake">
 
@@ -82,7 +114,7 @@ Currently not supported with Premake. See [CMake](#cmake) to build for Mac.
 
 ### Troubleshooting
 
-If you get an OpenGL unsupported version error, downgrade the version info defined in `cg::version` and in the shaders located in `resources/shaders` to the highest available for your graphics driver. The minimum supported version is 3.3.
+If you get an OpenGL unsupported version error, downgrade the version info defined in `cg::version` and in the shaders located in `resources/shaders` to the highest available for your graphics driver. The minimum supported version is 3.3. On Mac, the version is automatically downgraded to 4.1.
 
 ## Exercises
 
