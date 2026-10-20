@@ -75,6 +75,36 @@ project "GLFW"
 			"_CRT_SECURE_NO_WARNINGS"
 		}
 
+		filter "system:macosx"
+				architecture "ARM64"
+				pic "On"
+				staticruntime "On"
+
+				files
+				{
+					"GLFW/src/cocoa_init.m",
+					"GLFW/src/cocoa_joystick.m",
+					"GLFW/src/cocoa_monitor.m",
+					"GLFW/src/cocoa_window.m",
+					"GLFW/src/nsgl_context.m",
+					"GLFW/src/cocoa_time.c",
+					"GLFW/src/posix_thread.c",
+					"GLFW/src/posix_module.c",
+                    "GLFW/src/egl_context.c",
+                    "GLFW/src/osmesa_context.c"
+				}
+
+				defines
+				{
+					"_GLFW_COCOA"
+				}
+
+				links
+				{
+					"Cocoa.framework",
+					"IOKit.framework"
+				}
+
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "on"
@@ -82,4 +112,3 @@ project "GLFW"
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "on"
-

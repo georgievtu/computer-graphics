@@ -208,6 +208,22 @@ static std::optional<std::string> read_shader(const std::string& path)
     in.seekg(0, std::ios::beg);
     in.read(&result[0], size);
 
+    /*
+     * Changing version to 410 for Mac here.
+     * TODO Temp fix, probably not the best solution.
+     */
+    #ifdef __APPLE__
+    if (result.starts_with("#version") == false)
+        return std::nullopt;
+
+    const auto nl = result.find("\n");
+    result.replace(
+        0,
+        nl,
+        cg::version.glsl_version
+    );
+    #endif // APPLE
+
     return result;
 }
 
@@ -647,4 +663,3 @@ int main(void)
      */
     run();
 }
-

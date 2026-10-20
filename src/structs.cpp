@@ -3,11 +3,21 @@
 namespace cg
 {
 
+static constexpr auto gl_major = 4;
+/* TODO Jank Mac fix, consider moving this? */
+#ifndef __APPLE__
+static constexpr auto gl_minor = 6;
+static constexpr auto glsl_version = "#version 460";
+#else
+static constexpr auto gl_minor = 1;
+static constexpr auto glsl_version = "#version 410";
+#endif // APPLE
+
 const Version version =
 {
-    .gl_major = 4,
-    .gl_minor = 6,
-    .glsl_version = "#version 460"
+    .gl_major = gl_major,
+    .gl_minor = gl_minor,
+    .glsl_version = glsl_version
 };
 
 const Window window =
@@ -43,4 +53,3 @@ Camera camera =
 };
 
 } // namespace cg
-

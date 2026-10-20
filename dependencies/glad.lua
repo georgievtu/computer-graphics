@@ -31,6 +31,11 @@ project "GLAD"
 			"_CRT_SECURE_NO_WARNINGS"
 		}
 
+	filter "system:macosx"
+		architecture "ARM64"
+		pic "On"
+		staticruntime "On"
+
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "on"
@@ -38,4 +43,3 @@ project "GLAD"
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "on"
-

@@ -41,6 +41,13 @@ project "ImGui"
 			"_CRT_SECURE_NO_WARNINGS"
 		}
 
+	filter "system:macosx"
+		architecture "ARM64"
+		pic "On"
+		staticruntime "On"
+		-- TODO Silencing ImGui warnings on clang, consider different approach here?
+		buildoptions { "-Wno-nontrivial-memcall" }
+
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "on"
@@ -48,4 +55,3 @@ project "ImGui"
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "on"
-

@@ -1,6 +1,6 @@
 project "GLM"
 	kind "StaticLib"
-	language "C"
+	language "C++"
 	architecture "x86_64"
 
 	targetdir "../bin/%{cfg.buildcfg}"
@@ -34,6 +34,9 @@ project "GLM"
 			"_CRT_SECURE_NO_WARNINGS"
 		}
 
+	filter "system:macosx"
+		architecture "ARM64"
+
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "on"
@@ -41,4 +44,3 @@ project "GLM"
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "on"
-

@@ -2,7 +2,10 @@ workspace "ComputerGraphics"
     configurations { "Debug", "Release" }
     startproject "CG"
 
-    flags { "MultiProcessorCompile" }
+    -- TODO This is jank, figure out flags replacement on other platforms
+    if os.target() ~= "macosx" then
+        flags { "MultiProcessorCompile" }
+    end
 
     filter "configurations:Debug"
         defines { "DEBUG", "DEBUG_SHADER" }
@@ -11,7 +14,11 @@ workspace "ComputerGraphics"
     filter "configurations:Release"
         defines { "RELEASE" }
         optimize "Speed"
-        flags { "LinkTimeOptimization" }
+        -- TODO This is jank, figure out flags replacement on other platforms
+        if os.target() ~= "macosx" then
+            flags { "LinkTimeOptimization" }
+        end
+    filter {}
 
 project "CG"
     kind "ConsoleApp"
@@ -37,8 +44,17 @@ project "CG"
     filter "system:windows"
         defines { "_WINDOWS" }
 
+    filter "system:macosx"
+		architecture "ARM64"
+		pic "On"
+		staticruntime "On"
+        links
+        {
+            "Cocoa.framework",
+            "IOKit.framework",
+        }
+
 include "dependencies/glfw.lua"
 include "dependencies/glad.lua"
 include "dependencies/glm.lua"
 include "dependencies/imgui.lua"
-
